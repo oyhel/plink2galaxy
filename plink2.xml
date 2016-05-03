@@ -1,0 +1,121 @@
+<tool id="plink2" name="PLINK Genetic Toolbox" version="0.1.0">
+    <requirements>
+        <requirement type="package" version="1.90-beta3.36">plink</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+	plink 
+	  --input_type=$input_selection.input_type
+    	#if str($input_selection.input_type)=="pedmap"
+      		--ped=$input_selection.ped
+      		--map=$input_selection.ped
+    	#elif str($input_selection.input_type)=="lped"
+      		--lped_path=$input_selection.file.extra_files_path
+      		--lped_basefile=$input_selection.file.metadata.base_name
+    	#elif str($input_selection.input_type)=="pbed"
+      		--pbed_path=$input_selection.bfile.extra_files_path
+      		--pbed_basefile=$input_selection.bfile.metadata.base_name
+    	#elif str($input_selection.input_type)=="bbf"
+      		--bed=$input_selection.bed
+      		--bim=$input_selection.bim
+      		--fam=$input_selection.fam
+	#elif str($input_selection.input_type)=="vcf"
+		--vcf=$input_selection.vcf
+    	#end if
+
+	#if $mind
+		--mind=$mind
+	#end if
+
+	#if $geno
+		--geno=$geno
+	#end if
+
+	#if $maf
+		--maf=$maf
+	#end if
+
+	#if $maxmaf
+		--maxmaf=$maxmaf
+	#end if
+
+    ]]></command>
+    <inputs>
+    <conditional name="input_selection">
+      <param name="input_type" type="select" label="Select input file type" help="">
+        <option value="pedmap">Pedigree and genetic map (--ped and --map)</option>
+        <option value="lped">Uncompressed data (--file)</option>
+        <option value="pbed">Compressed data (--bfile)</option>
+        <option value="bbf">Compressed data (--bed --bim and --fam)</option>
+	<option value="vcf">VCF file (--vcf)</option>
+      </param>
+      <when value="pedmap">
+        <param name="ped" type="data" format="ped" label="Pedigree file (--ped)" help="Pedigree file format" />
+        <param name="map" type="data" format="map" label="Genetic map (--map)" help="File with SNP info" />
+      </when>
+      <when value="lped">
+        <param name="file" type="data" format="lped" label="Uncompressed data (--file)" help="" />
+      </when>
+      <when value="pbed">
+        <param name="bfile" type="data" format="pbed" label="Compressed data (--bfile)" help="" />
+      </when>
+      <when value="bbf">
+        <param name="bed" type="data" format="bed" label="Binary pedigree file (--bed)" help="" />
+        <param name="bim" type="data" format="txt" label="Binary genetic map (--bim)" help="" />
+        <param name="fam" type="data" format="txt" label="Family file (--fam)" help="" />
+      </when>
+      </when value="vcf">
+        <param name="vcf" type="data" format="vcf" label="VCF file (--vcf)" help="" />
+      </when>
+    </conditional>
+    <param name="mind" type="float" value="" optional="true" label="Max missingness per individual" help="Max allowed missing rate in sample" />
+    <param name="geno" type="float" value="" optional="true" label="Max missingness per SNP" help="Max allowed missing rate in SNP" />
+    <param name="maf" type="float" value="" optional="true" label="Minor allele frequency threshold (lower)" help="Include only SNPs above this threshold" />
+    <param name="maxmaf" type="float" value="" optional="true" label="Minor allele frequency threshold (upper)" help="Include only SNPs below this threshold" />
+    </inputs>
+    <outputs>
+    </outputs>
+
+    <tests>
+        <!-- PLINK2 test -->
+        <test>
+            <param name="input-type" value="pedmap" />
+	    <param name="ped" value="toy.ped" />
+	    <param name="map" value="toy.map" />
+            <output name="bed" file="toy.bed" ftype="bed" />
+ 	    <output name="bim" file="toy.bim" ftype="bim" />
+	    <output name="fam" file="toy.fam" ftype="fam" />
+        </test>
+    </tests>
+
+    <help><![CDATA[
+        PLINK v1.90b3.36 64-bit (31 Mar 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+
+  plink [input flag(s)...] {command flag(s)...} {other flag(s)...}
+  plink --help {flag name(s)...}
+
+Commands include --make-bed, --recode, --flip-scan, --merge-list,
+--write-snplist, --list-duplicate-vars, --freqx, --missing, --test-mishap,
+--hardy, --mendel, --ibc, --impute-sex, --indep-pairphase, --r2, --show-tags,
+--blocks, --distance, --genome, --homozyg, --make-rel, --make-grm-gz,
+--rel-cutoff, --cluster, --pca, --neighbour, --ibs-test, --regress-distance,
+--model, --bd, --gxe, --logistic, --dosage, --lasso, --test-missing,
+--make-perm-pheno, --tdt, --qfam, --annotate, --clump, --gene-report,
+--meta-analysis, --epistasis, --fast-epistasis, and --score.
+
+'plink --help | more' describes all functions (warning: long).
+
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+@misc{renameTODO,
+  author = {LastTODO, FirstTODO},
+  year = {TODO},
+  title = {TODO},
+  url = {https://www.cog-genomics.org/plink2},
+}</citation>
+    </citations>
+</tool>
