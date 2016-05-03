@@ -66,7 +66,7 @@
         <param name="bim" type="data" format="txt" label="Binary genetic map (--bim)" help="" />
         <param name="fam" type="data" format="txt" label="Family file (--fam)" help="" />
       </when>
-      </when value="vcf">
+      <when value="vcf">
         <param name="vcf" type="data" format="vcf" label="VCF file (--vcf)" help="" />
       </when>
     </conditional>
